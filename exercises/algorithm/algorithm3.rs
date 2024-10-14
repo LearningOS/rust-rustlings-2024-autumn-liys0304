@@ -7,6 +7,10 @@
 
 fn sort<T>(array: &mut [T]){
 	//TODO
+    for num in array {
+        let mut flag = false;
+        for 
+    }
 }
 #[cfg(test)]
 mod tests {
