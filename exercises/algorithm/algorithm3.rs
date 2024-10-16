@@ -3,13 +3,21 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
+use std::mem::swap;
 
-fn sort<T>(array: &mut [T]){
+fn sort<T: std::cmp::PartialOrd>(array: &mut [T]){
 	//TODO
-    for num in array {
-        let mut flag = false;
-        for 
+    for i in 0..array.len() {
+        let mut flag:bool = false;
+        for j in 0..(array.len() - i - 1) {
+            if array[j] > array[j + 1] {
+                array.swap(j, j + 1);
+                flag = true;
+            }
+        }
+        if flag == false {
+            break;
+        }
     }
 }
 #[cfg(test)]

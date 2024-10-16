@@ -2,8 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
-
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
 use std::vec::*;
@@ -69,14 +67,64 @@ impl<T> LinkedList<T> {
             },
         }
     }
+    
+}
+
+impl<T> Drop for LinkedList<T> {
+    fn drop(&mut self) {
+        let mut current = self.start;
+        while let Some(node_ptr) = current {
+            unsafe {
+                // 将裸指针转换回 Box 并释放内存
+                let boxed_node = Box::from_raw(node_ptr.as_ptr());
+                current = boxed_node.next;
+                // boxed_node 在这里被释放
+            }
+        }
+    }
+}
+
+impl<T> LinkedList<T> 
+where 
+    T:PartialOrd + Clone,
+{
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut merged = LinkedList::new();
+        let mut lista_node = list_a.start;
+        let mut listb_node = list_b.start;
+        
+        while let (Some(node_a), Some(node_b)) = (lista_node, listb_node) {
+            unsafe {
+                let node_a_val = (*node_a.as_ptr()).val.clone();
+                let node_b_val = (*node_b.as_ptr()).val.clone();
+                if node_a_val <= node_b_val {
+                    merged.add(node_a_val);
+                    lista_node = (*node_a.as_ptr()).next;
+                } else {
+                    merged.add(node_b_val);
+                    listb_node = (*node_b.as_ptr()).next;
+                }
+            }
+            print!("test");
         }
+
+        while let Some(node_a) = lista_node {
+            unsafe {
+                let node_val = (*node_a.as_ptr()).val.clone();
+                merged.add(node_val);
+                lista_node = (*node_a.as_ptr()).next;
+            }
+        }
+        while let Some(node_b) = listb_node {
+            unsafe {
+                let node_val = (*node_b.as_ptr()).val.clone();
+                merged.add(node_val);
+                listb_node = (*node_b.as_ptr()).next;
+            }
+        }
+        merged
 	}
 }
 
